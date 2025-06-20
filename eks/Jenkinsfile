@@ -16,21 +16,21 @@ pipeline {
 
         stage('Terraform Init'){
             steps{
-                dir(eks){
+                dir('eks'){
                     sh 'terraform init'
                 }
             }
         }
         stage('Terraform Plan'){
             steps{
-                dir(eks){
+                dir('eks'){
                     sh 'terraform plan'
                 }
             }
         }
         stage('Terraform Apply'){
             steps{
-                dir(eks){
+                dir('eks'){
                     sh 'terraform apply -auto-approve'
                 }
             }
