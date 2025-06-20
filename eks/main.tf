@@ -41,16 +41,20 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policies" {
 }
 
 # Create EKS Cluster
-resource "aws_eks_cluster" "eks" {
+resource "aws_eks_cluster" "eks_cluster" {
   name     = "my-eks-cluster"
-  role_arn = aws_iam_role.eks_cluster_role.arn
+  role_arn = aws_iam_role.eks.arn
 
   vpc_config {
-    subnet_ids = aws_subnet.eks_subnets[*].id
+    subnet_ids = aws_subnet.eks_subnet[*].id
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policies]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.eks_AmazonEKSServicePolicy
+  ]
 }
+
 
 # IAM Role for EKS Node Group
 resource "aws_iam_role" "node_role" {
