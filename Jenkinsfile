@@ -1,0 +1,38 @@
+pipeline {
+    agent any 
+
+    environment {
+        AWS_ACCESS_KEY__ID      = credentials('aws-access')
+        AWS_SECRET_ACCESS_KEY   = credentials('aws-secret')
+    }
+
+    stages {
+        stage('Clone Repo'){
+            steps{
+                git branch: 'main', credentialsId: 'github-token', url: "https://github.com/Shiva-2103/CloudInfrax.git"
+            }
+        }
+    }
+
+        stage('Terraform Init'){
+            steps{
+                dir(eks){
+                    sh 'terraform init'
+                }
+            }
+        }
+        stage('Terraform Plan'){
+            steps{
+                dir(eks){
+                    sh 'terraform plan'
+                }
+            }
+        }
+        stage('Terraform Apply'){
+            steps{
+                dir(eks){
+                    sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+}
